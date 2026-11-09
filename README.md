@@ -24,6 +24,15 @@ commit `0c74ada` "feat: redesign"):
     imported **after** `assets/css/app.min.css` in `src/login/KcPage.tsx` and overrides the
     `--ct-*` variables (and the handful of hardcoded declarations) that the prebuilt template CSS
     still carries from the old AUGUR blue `#1478f0`.
+-   Keycloak also ships its own **PatternFly** stylesheet, and several pages (`login-username`,
+    `login-password`, `login-reset-password`, `login-update-password`, `login-otp`,
+    `login-config-totp`, `select-authenticator`, `terms`, `logout-confirm`) render keycloakify's
+    default markup, whose submit buttons carry `pf-c-button pf-m-primary` instead of bootstrap's
+    `.btn-primary`. Those buttons, the language dropdown, the authenticator tiles and the plain
+    links were still PatternFly blue `#06c`. The bottom of `climaqva-brand.css` therefore re-skins
+    the PatternFly *global* tokens (`--pf-global--primary-color--*`, `--pf-global--link--Color`,
+    `--pf-global--active-color--100`, surfaces) per `data-bs-theme` rather than patching each rule.
+    Keycloakify injects the theme bundle at runtime, so it always cascades after PatternFly.
 -   The login pages render in **dark mode**, like the app: `index.html` sets
     `data-bs-theme="dark"` on `<html>` (Keycloakify copies this into the generated `.ftl` files) and
     `src/login/KcPage.tsx` re-asserts it before React paints.

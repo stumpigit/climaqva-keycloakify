@@ -269,3 +269,57 @@ body {
     font-size: 0.9375rem;
     font-weight: 600;
 }
+
+/* ------------------------------------------- PatternFly (keycloak's own CSS)
+
+   Keycloak ships @patternfly/patternfly for the widgets it owns, and several
+   login pages (login-username, login-password, login-reset-password,
+   login-update-password, login-otp, login-config-totp, select-authenticator,
+   terms, logout-confirm) render keycloakify's default markup, whose submit
+   buttons carry `pf-c-button pf-m-primary` - not bootstrap's `.btn-primary`.
+   Those buttons, plus the language dropdown, the tiles on select-authenticator
+   and the plain links, were still PatternFly blue #06c. Re-skinning the PatternFly
+   *global* tokens re-skins every one of them at once.
+
+   Note: the page is dark via data-bs-theme, but PatternFly has no idea (it looks
+   for its own .pf-theme-dark class), so it always resolves the light values.
+   We therefore set the globals per data-bs-theme.
+*/
+
+:root {
+    --pf-global--primary-color--100: #344074;
+    --pf-global--primary-color--200: #2a335d;
+    --pf-global--primary-color--300: #344074;
+    --pf-global--primary-color--dark-100: #344074;
+    --pf-global--active-color--100: #344074;
+    --pf-global--link--Color: #344074;
+    --pf-global--link--Color--hover: #2a335d;
+    --pf-global--link--Color--dark: #344074;
+    --pf-global--link--Color--dark--hover: #2a335d;
+}
+
+:root[data-bs-theme="dark"] {
+    --pf-global--primary-color--100: #4f63b3;
+    --pf-global--primary-color--200: #3f4f8f;
+    --pf-global--primary-color--300: #4f63b3;
+    --pf-global--primary-color--dark-100: #4f63b3;
+    --pf-global--active-color--100: #4f63b3;
+    --pf-global--link--Color: #a9b6e8;
+    --pf-global--link--Color--hover: #c3cdf2;
+    --pf-global--link--Color--dark: #a9b6e8;
+    --pf-global--link--Color--dark--hover: #c3cdf2;
+    /* PatternFly assumes a light surface for these widgets */
+    --pf-global--BackgroundColor--100: #161b2d;
+    --pf-global--BackgroundColor--light-100: #161b2d;
+    --pf-global--BackgroundColor--200: #1c2236;
+    --pf-global--BorderColor--100: rgba(255, 255, 255, 0.08);
+    --pf-global--Color--100: #c3cad9;
+    --pf-global--Color--200: #8a93ab;
+    --pf-global--heading--color: #e6eaf3;
+}
+
+/* PatternFly buttons had 1px corners while the bootstrap inputs next to them
+   use --ct-border-radius (0.2rem) - align them. */
+.pf-c-button {
+    --pf-c-button--BorderRadius: var(--ct-border-radius);
+}
