@@ -1,5 +1,6 @@
 import "./assets/css/app.min.css";
 import "./assets/css/icons.min.css";
+import "./assets/css/climaqva-brand.css";
 
 import { Suspense, lazy } from "react";
 import type { ClassKey } from "keycloakify/login";
@@ -8,11 +9,16 @@ import { useI18n } from "./i18n";
 import DefaultPage from "keycloakify/login/DefaultPage";
 import Template from "./Template";
 const Login = lazy(() => import("./pages/Login"));
-const UserProfileFormFields = lazy(
-    () => import("./UserProfileFormFields")
-);
+const UserProfileFormFields = lazy(() => import("./UserProfileFormFields"));
 
 const doMakeUserConfirmPassword = true;
+
+// The ClimaQva app boots in dark mode (src/frontend/app.html sets
+// data-bs-theme="dark"), so the login pages do the same. Done at module scope
+// - before React paints - to avoid a light mode flash.
+if (typeof document !== "undefined") {
+    document.documentElement.setAttribute("data-bs-theme", "dark");
+}
 
 export default function KcPage(props: { kcContext: KcContext }) {
     const { kcContext } = props;
@@ -23,7 +29,8 @@ export default function KcPage(props: { kcContext: KcContext }) {
         <Suspense>
             {(() => {
                 switch (kcContext.pageId) {
-                    case "login.ftl": return (
+                    case "login.ftl":
+                        return (
                             <Login
                                 {...{ kcContext, i18n, classes }}
                                 Template={Template}
@@ -49,8 +56,6 @@ export default function KcPage(props: { kcContext: KcContext }) {
 }
 
 const classes = {
-    kcInputClass: 'form-control',
-    kcFormCardClass: 'card overflow-hidden text-center p-xxl-4 p-3 mb-0'
-
-
+    kcInputClass: "form-control",
+    kcFormCardClass: "card overflow-hidden text-center p-xxl-4 p-3 mb-0"
 } satisfies { [key in ClassKey]?: string };

@@ -1,0 +1,271 @@
+/**
+ * ClimaQva brand layer for the Keycloak login theme.
+ *
+ * The prebuilt app.css ships the "Aspire" bootstrap theme with the `--ct-`
+ * variable prefix and the old AUGUR blue (#1478f0). This file re-skins it with
+ * the ClimaQva design tokens introduced in the ClimaQva app by commit 0c74ada
+ * ("feat: redesign"):
+ *
+ *   src/frontend/src/scss/_variables.scss      -> light tokens
+ *   src/frontend/src/scss/_variables-dark.scss -> dark tokens
+ *   src/frontend/src/scss/_reboot.scss         -> body background
+ *   src/frontend/src/scss/_buttons.scss        -> dark button variants
+ *
+ * It must be imported AFTER assets/css/app.min.css so the later rules win.
+ */
+
+/* ------------------------------------------------------------------ light */
+
+:root {
+    /* brand palette (ClimaQva) */
+    --ct-primary: #344074; /* $brand-navy */
+    --ct-primary-rgb: 52, 64, 116;
+    --ct-secondary: #598d96; /* $brand-teal */
+    --ct-secondary-rgb: 89, 141, 150;
+    --ct-info: #5b8fc7;
+    --ct-info-rgb: 91, 143, 199;
+
+    --ct-primary-text-emphasis: #29335c;
+    --ct-primary-bg-subtle: #e6e9f2;
+    --ct-primary-border-subtle: #b8c0dd;
+    --ct-secondary-text-emphasis: #47707a;
+    --ct-secondary-bg-subtle: #e7f0f2;
+    --ct-secondary-border-subtle: #a9c6cc;
+
+    /* surfaces & text */
+    --ct-body-color: #3d4359;
+    --ct-body-color-rgb: 61, 67, 89;
+    --ct-body-bg: #f4f6fa;
+    --ct-body-bg-rgb: 244, 246, 250;
+    --ct-secondary-color: #7a8199;
+    --ct-secondary-color-rgb: 122, 129, 153;
+    --ct-secondary-bg: #ffffff;
+    --ct-secondary-bg-rgb: 255, 255, 255;
+    --ct-tertiary-bg: #eef1f6;
+    --ct-tertiary-bg-rgb: 238, 241, 246;
+    --ct-border-color: #e3e7ef;
+    --ct-border-color-translucent: rgba(52, 64, 116, 0.14);
+    --ct-heading-color: #232a45;
+    --ct-link-color: #344074;
+    --ct-link-hover-color: #29335c;
+    --ct-custom-bg: #ffffff;
+    --ct-box-shadow: 0 1px 2px rgba(23, 30, 58, 0.04), 0 2px 8px rgba(23, 30, 58, 0.05);
+
+    /* logo geometry (was 40px / 30px) */
+    --ct-logo-lg-height: 58px;
+    --ct-logo-sm-height: 36px;
+}
+
+/* ------------------------------------------------------------------- dark */
+
+:root[data-bs-theme="dark"] {
+    --ct-primary: #7387d3;
+    --ct-primary-rgb: 115, 135, 211;
+    --ct-secondary: #74adb5;
+    --ct-secondary-rgb: 116, 173, 181;
+
+    --ct-primary-text-emphasis: #a9b6e8;
+    --ct-primary-bg-subtle: rgba(115, 135, 211, 0.2);
+    --ct-primary-border-subtle: #4f63b3;
+    --ct-secondary-text-emphasis: #82b9c0;
+    --ct-secondary-bg-subtle: rgba(116, 173, 181, 0.2);
+    --ct-secondary-border-subtle: #4b8089;
+
+    --ct-body-color: #c3cad9;
+    --ct-body-color-rgb: 195, 202, 217;
+    --ct-body-bg: #0e1220;
+    --ct-body-bg-rgb: 14, 18, 32;
+    --ct-emphasis-color: #e6eaf3;
+    --ct-emphasis-color-rgb: 230, 234, 243;
+    --ct-secondary-color: #8a93ab;
+    --ct-secondary-color-rgb: 138, 147, 171;
+    --ct-secondary-bg: #161b2d;
+    --ct-secondary-bg-rgb: 22, 27, 45;
+    --ct-tertiary-bg: #1c2236;
+    --ct-tertiary-bg-rgb: 28, 34, 54;
+    --ct-border-color: rgba(255, 255, 255, 0.08);
+    --ct-border-color-translucent: rgba(255, 255, 255, 0.14);
+    --ct-heading-color: #e6eaf3;
+    --ct-link-color: #a9b6e8;
+    --ct-link-hover-color: #c0d3e9;
+    --ct-custom-bg: #161b2d;
+    --ct-custom-color: #e6eaf3;
+    --ct-light: rgba(255, 255, 255, 0.11);
+    --ct-light-rgb: 255, 255, 255;
+    --ct-dark: rgba(255, 255, 255, 0.2);
+    --ct-dark-rgb: 255, 255, 255;
+    --ct-box-shadow: 0 0 35px 0 rgba(5, 8, 18, 0.5);
+}
+
+/* ------------------------------------------------------- body background */
+/* The old theme painted a stock photo behind the login card. ClimaQva dropped
+   the photo in _reboot.scss: flat colour in light mode, brand-tinted radial
+   gradients in dark mode. */
+
+body {
+    background: var(--ct-body-bg);
+    background-attachment: fixed;
+}
+
+:root[data-bs-theme="dark"] body {
+    background: radial-gradient(
+            1200px 700px at 100% 0%,
+            rgba(89, 141, 150, 0.1),
+            transparent 60%
+        ),
+        radial-gradient(1000px 700px at 0% 100%, rgba(52, 64, 116, 0.28), transparent 60%),
+        var(--ct-body-bg);
+    background-attachment: fixed;
+}
+
+::selection {
+    color: var(--ct-primary);
+    background: rgba(var(--ct-primary-rgb), 0.15);
+}
+
+/* ------------------------------------------------------------------ cards */
+
+.card {
+    --ct-card-border-width: 1px;
+    --ct-card-border-color: var(--ct-border-color);
+    --ct-card-border-radius: var(--ct-border-radius-lg);
+    --ct-card-inner-border-radius: calc(var(--ct-border-radius-lg) - 1px);
+    --ct-card-box-shadow: 0 1px 2px rgba(23, 30, 58, 0.04),
+        0 2px 8px rgba(23, 30, 58, 0.05);
+}
+
+:root[data-bs-theme="dark"] .card {
+    --ct-card-border-color: var(--ct-border-color);
+    --ct-card-box-shadow: none;
+}
+
+/* ---------------------------------------------------------------- buttons */
+/* bootstrap-variant() compiled the old blue into these custom properties, so
+   overriding --ct-primary alone is not enough. */
+
+.btn-primary {
+    --ct-btn-color: #ffffff;
+    --ct-btn-bg: #344074;
+    --ct-btn-border-color: #344074;
+    --ct-btn-hover-color: #ffffff;
+    --ct-btn-hover-bg: #2c3762;
+    --ct-btn-hover-border-color: #29335c;
+    --ct-btn-focus-shadow-rgb: 52, 64, 116;
+    --ct-btn-active-color: #ffffff;
+    --ct-btn-active-bg: #29335c;
+    --ct-btn-active-border-color: #29335c;
+}
+
+.btn-outline-primary {
+    --ct-btn-color: #344074;
+    --ct-btn-border-color: #344074;
+    --ct-btn-hover-color: #ffffff;
+    --ct-btn-hover-bg: #344074;
+    --ct-btn-hover-border-color: #344074;
+    --ct-btn-focus-shadow-rgb: 52, 64, 116;
+    --ct-btn-active-color: #ffffff;
+    --ct-btn-active-bg: #344074;
+    --ct-btn-active-border-color: #344074;
+}
+
+.btn-secondary {
+    --ct-btn-color: #ffffff;
+    --ct-btn-bg: #598d96;
+    --ct-btn-border-color: #598d96;
+    --ct-btn-hover-color: #ffffff;
+    --ct-btn-hover-bg: #4c7a82;
+    --ct-btn-hover-border-color: #47707a;
+    --ct-btn-focus-shadow-rgb: 89, 141, 150;
+    --ct-btn-active-color: #ffffff;
+    --ct-btn-active-bg: #47707a;
+    --ct-btn-active-border-color: #47707a;
+}
+
+.btn-outline-secondary {
+    --ct-btn-color: #598d96;
+    --ct-btn-border-color: #598d96;
+    --ct-btn-hover-color: #ffffff;
+    --ct-btn-hover-bg: #598d96;
+    --ct-btn-hover-border-color: #598d96;
+    --ct-btn-focus-shadow-rgb: 89, 141, 150;
+    --ct-btn-active-color: #ffffff;
+    --ct-btn-active-bg: #598d96;
+    --ct-btn-active-border-color: #598d96;
+}
+
+:root[data-bs-theme="dark"] .btn-primary {
+    --ct-btn-bg: #4f63b3;
+    --ct-btn-border-color: #4f63b3;
+    --ct-btn-hover-bg: #42559e;
+    --ct-btn-hover-border-color: #3f5196;
+    --ct-btn-focus-shadow-rgb: 115, 135, 211;
+    --ct-btn-active-bg: #4f63b3;
+    --ct-btn-active-border-color: #4f63b3;
+}
+
+:root[data-bs-theme="dark"] .btn-outline-primary {
+    --ct-btn-color: #7387d3;
+    --ct-btn-border-color: #7387d3;
+    --ct-btn-hover-color: #ffffff;
+    --ct-btn-hover-bg: #7387d3;
+    --ct-btn-hover-border-color: #7387d3;
+    --ct-btn-focus-shadow-rgb: 115, 135, 211;
+    --ct-btn-active-color: #ffffff;
+    --ct-btn-active-bg: #7387d3;
+    --ct-btn-active-border-color: #7387d3;
+}
+
+:root[data-bs-theme="dark"] .btn-secondary {
+    --ct-btn-color: #ffffff;
+    --ct-btn-bg: #4b8089;
+    --ct-btn-border-color: #4b8089;
+    --ct-btn-hover-bg: #3f6d75;
+    --ct-btn-hover-border-color: #3b666d;
+    --ct-btn-focus-shadow-rgb: 116, 173, 181;
+    --ct-btn-active-bg: #4b8089;
+    --ct-btn-active-border-color: #4b8089;
+}
+
+:root[data-bs-theme="dark"] .btn-outline-secondary {
+    --ct-btn-color: #74adb5;
+    --ct-btn-border-color: #74adb5;
+    --ct-btn-hover-color: #ffffff;
+    --ct-btn-hover-bg: #74adb5;
+    --ct-btn-hover-border-color: #74adb5;
+    --ct-btn-focus-shadow-rgb: 116, 173, 181;
+    --ct-btn-active-color: #ffffff;
+    --ct-btn-active-bg: #74adb5;
+    --ct-btn-active-border-color: #74adb5;
+}
+
+/* ------------------------------------------------------------ login card */
+
+/* bootstrap compiled the old primary into a few hardcoded declarations instead
+   of var() - the ones still reachable from the login pages. */
+
+.form-check-input:checked,
+.form-check-input[type="checkbox"]:indeterminate {
+    background-color: var(--ct-primary);
+    border-color: var(--ct-primary);
+}
+
+.form-check-input:focus,
+.form-select:focus,
+.nav-link:focus-visible {
+    box-shadow: 0 0 0 0.15rem rgba(var(--ct-primary-rgb), 0.25);
+}
+
+.auth-brand {
+    margin-bottom: 1rem !important;
+}
+
+.auth-brand .logo-dark,
+.auth-brand .logo-light {
+    height: 40px;
+    width: auto;
+}
+
+.auth-brand-subtitle {
+    font-size: 0.9375rem;
+    font-weight: 600;
+}

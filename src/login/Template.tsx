@@ -8,8 +8,8 @@ import { useInitialize } from "keycloakify/login/Template.useInitialize";
 import type { I18n } from "./i18n";
 import type { KcContext } from "./KcContext";
 
-import logoDarkPngUrl from "./assets/images/logo-dark.png";
-import logoPngUrl from "./assets/images/logo.png";
+import logoDarkSvgUrl from "./assets/images/climaqva-logo.svg";
+import logoSvgUrl from "./assets/images/climaqva-logo-inverse.svg";
 
 export default function Template(props: TemplateProps<KcContext, I18n>) {
     const {
@@ -39,12 +39,12 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
 
     useSetClassName({
         qualifiedName: "html",
-        className: ''
+        className: ""
     });
 
     useSetClassName({
         qualifiedName: "body",
-        className: ''
+        className: ""
     });
 
     const { isReadyToRender } = useInitialize({ kcContext, doUseDefaultCss });
@@ -59,13 +59,13 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
                 <div className={clsx("col-xxl-3 col-lg-5 col-md-6")}>
                     <div className={kcClsx("kcLoginClass")}>
                         <div className={clsx("auth-brand d-flex justify-content-center mb-2")}>
-                            <img src={logoDarkPngUrl} alt="dark logo" height="26" className={clsx("logo-dark")} />
-                            <img src={logoPngUrl} alt="logo light" height="26" className={clsx("logo-light")} />
+                            {/* .logo-dark is the logo for light mode, .logo-light the one for dark mode */}
+                            <img src={logoDarkSvgUrl} alt="ClimaQva" className={clsx("logo-dark")} />
+                            <img src={logoSvgUrl} alt="ClimaQva" className={clsx("logo-light")} />
                         </div>
 
-                        <p className={clsx("fw-semibold mb-4 text-center text-muted fs-15")}>Login to the AUGUR Toolbox</p>
+                        <p className={clsx("auth-brand-subtitle mb-4 text-center text-muted")}>{msg("loginSubtitle")}</p>
 
-                            
                         <div className={clsx("card overflow-hidden text-center p-xxl-4 p-3 mb-0")}>
                             <header className={kcClsx("kcFormHeaderClass")}>
                                 {enabledLanguages.length > 1 && (
@@ -92,7 +92,12 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
                                                 >
                                                     {enabledLanguages.map(({ languageTag, label, href }, i) => (
                                                         <li key={languageTag} className={kcClsx("kcLocaleListItemClass")} role="none">
-                                                            <a role="menuitem" id={`language-${i + 1}`} className={kcClsx("kcLocaleItemClass")} href={href}>
+                                                            <a
+                                                                role="menuitem"
+                                                                id={`language-${i + 1}`}
+                                                                className={kcClsx("kcLocaleItemClass")}
+                                                                href={href}
+                                                            >
                                                                 {label}
                                                             </a>
                                                         </li>
