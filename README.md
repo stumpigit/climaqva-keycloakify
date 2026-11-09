@@ -82,6 +82,38 @@ After deploying the jar, set the theme for the realm (admin console → Realm se
 `.keycloakify/realm-kc-26.json` already carries `"loginTheme": "climaqva-theme"`. Then clear the
 Keycloak cache / restart, because themes are cached.
 
+## Asset budget
+
+The Aspire template drags in a lot that a login page never needs. Measured with headless
+Chromium over all login pages (transfer = what actually hits the wire, gzip where it helps):
+
+| | before | now |
+| --- | ---: | ---: |
+| first page load | ~1.23 MB | **~0.36 MB** |
+| theme CSS bundle | 785 KB / 114 KB gz | 436 KB / **57 KB** gz |
+| icon font | 800 KB (`tabler-icons.woff2`) | none |
+| jar | 7.45 MB | **2.81 MB** |
+| external requests | 1 (Google Fonts) | **0** |
+
+What changed:
+
+-   `assets/css/icons.min.css` (376 KB CSS, ~8 MB of font files) is **not imported** anymore. The
+    only glyph any login page used was `ti-eye` on the password reveal button, which is an inline
+    SVG in `src/login/pages/Login.tsx` now.
+-   `Atkinson Hyperlegible Next` is self-hosted from `src/login/assets/fonts/` (4 woff2 subsets,
+    108 KB, SIL Open Font License 1.1 — see the `@font-face` block at the top of
+    `climaqva-brand.css`). The `@import` from `fonts.googleapis.com` was removed from
+    `app.min.css`: it cost a blocking cross-origin round-trip on every login and disclosed the
+    visitor's IP to Google.
+-   `Template.tsx` renders a single `<img>` for the current mode instead of two — a hidden
+    `<img>` still downloads its `src`.
+
+Still in the jar but never fetched: `body-bg-light.jpg` / `body-bg-dark.jpg` (570 KB, referenced
+by `app.min.css` but overridden by `climaqva-brand.css`), the Keycloak-bundled PatternFly CSS
+(1.4 MB raw / 133 KB gz) and the OpenSans fonts of the legacy PatternFly. Keycloak gzips theme
+resources itself (resource-encoding SPI; `image/png`/`image/jpeg` are excluded by default) and
+theme caching is on in production mode.
+
 ## Testing the theme locally
 
 ```bash

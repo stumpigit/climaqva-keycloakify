@@ -88,8 +88,8 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                             method="post"
                         >
                             {!usernameHidden && (
-                                <div className={clsx("mb3",kcClsx("kcFormGroupClass"))}>
-                                    <label htmlFor="username" className={clsx("form-label",kcClsx("kcLabelClass"))}>
+                                <div className={clsx("mb3", kcClsx("kcFormGroupClass"))}>
+                                    <label htmlFor="username" className={clsx("form-label", kcClsx("kcLabelClass"))}>
                                         {!realm.loginWithEmailAllowed
                                             ? msg("username")
                                             : !realm.registrationEmailAsUsername
@@ -147,19 +147,19 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                                 )}
                             </div>
 
-                            <div className={clsx("d-flex justify-content-between mb-3",kcClsx("kcFormGroupClass", "kcFormSettingClass"))}>
+                            <div className={clsx("d-flex justify-content-between mb-3", kcClsx("kcFormGroupClass", "kcFormSettingClass"))}>
                                 <div id="kc-form-options">
                                     {realm.rememberMe && !usernameHidden && (
                                         <div className="form-check">
-                                                <input
-                                                    tabIndex={5}
-                                                    className="form-check-input"
-                                                    id="rememberMe"
-                                                    name="rememberMe"
-                                                    type="checkbox"
-                                                    defaultChecked={!!login.rememberMe}
-                                                />
-                                                
+                                            <input
+                                                tabIndex={5}
+                                                className="form-check-input"
+                                                id="rememberMe"
+                                                name="rememberMe"
+                                                type="checkbox"
+                                                defaultChecked={!!login.rememberMe}
+                                            />
+
                                             <label className="form-label" htmlFor="rememberMe">
                                                 {msg("rememberMe")}
                                             </label>
@@ -177,12 +177,15 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                                 </div>
                             </div>
 
-                            <div id="kc-form-buttons" className={clsx("d-grid",kcClsx("kcFormGroupClass"))}>
+                            <div id="kc-form-buttons" className={clsx("d-grid", kcClsx("kcFormGroupClass"))}>
                                 <input type="hidden" id="id-hidden-input" name="credentialId" value={auth.selectedCredential} />
                                 <input
                                     tabIndex={7}
                                     disabled={isLoginButtonDisabled}
-                                    className={clsx("btn btn-primary fw-semibold",kcClsx("kcButtonClass", "kcButtonPrimaryClass", "kcButtonBlockClass", "kcButtonLargeClass"))}
+                                    className={clsx(
+                                        "btn btn-primary fw-semibold",
+                                        kcClsx("kcButtonClass", "kcButtonPrimaryClass", "kcButtonBlockClass", "kcButtonLargeClass")
+                                    )}
                                     name="login"
                                     id="kc-login"
                                     type="submit"
@@ -205,16 +208,33 @@ function PasswordWrapper(props: { kcClsx: KcClsx; i18n: I18n; passwordInputId: s
     const { isPasswordRevealed, toggleIsPasswordRevealed } = useIsPasswordRevealed({ passwordInputId });
 
     return (
-        <div className={clsx("input-group",kcClsx("kcInputGroup"))}>
+        <div className={clsx("input-group", kcClsx("kcInputGroup"))}>
             {children}
-             <button
+            <button
                 type="button"
-                className={clsx(isPasswordRevealed ? "btn btn-outline-secondary ti ti-eye-off":"btn btn-outline-secondary ti ti-eye")}
+                className={clsx("btn btn-outline-secondary", "kc-passwd-toggle")}
                 aria-label={msgStr(isPasswordRevealed ? "hidePassword" : "showPassword")}
                 aria-controls={passwordInputId}
                 onClick={toggleIsPasswordRevealed}
             >
-                
+                {/* Inline SVG instead of the `ti ti-eye` icon font: the tabler icon font is
+                    800 KB (gzip does not help) and this was the only glyph used anywhere. */}
+                <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                >
+                    <path d="M12 5C7 5 3.6 7.4 2 12c1.6 4.6 5 7 10 7s8.4-2.4 10-7c-1.6-4.6-5-7-10-7Z" />
+                    <circle cx="12" cy="12" r="3" />
+                    {isPasswordRevealed ? <path d="M4 4l16 16" /> : null}
+                </svg>
             </button>
         </div>
     );

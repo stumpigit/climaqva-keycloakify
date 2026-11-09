@@ -1,5 +1,7 @@
 import "./assets/css/app.min.css";
-import "./assets/css/icons.min.css";
+// icons.min.css (tabler + remixicon, 376 KB CSS + ~8 MB font files) is deliberately NOT
+// imported: the only glyph the login pages ever used was the password reveal icon, now an
+// inline SVG in pages/Login.tsx.
 import "./assets/css/climaqva-brand.css";
 
 import { Suspense, lazy } from "react";

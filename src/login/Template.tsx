@@ -53,15 +53,22 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
         return null;
     }
 
+    // A `display: none` <img> still downloads its src, so rendering both logos meant two
+    // fetches on every page load. The login pages run in a single, fixed mode (KcPage sets
+    // data-bs-theme on <html>), so only the matching one is rendered.
+    const isDarkMode = document.documentElement.dataset.bsTheme === "dark";
+
     return (
         <div className={clsx("auth-bg d-flex min-vh-100")}>
             <div className={clsx("row g-0 justify-content-center w-100 m-xxl-5 px-xxl-4 m-3")}>
                 <div className={clsx("col-xxl-3 col-lg-5 col-md-6")}>
                     <div className={kcClsx("kcLoginClass")}>
                         <div className={clsx("auth-brand d-flex justify-content-center mb-2")}>
-                            {/* .logo-dark is the logo for light mode, .logo-light the one for dark mode */}
-                            <img src={logoDarkSvgUrl} alt="ClimaQva" className={clsx("logo-dark")} />
-                            <img src={logoSvgUrl} alt="ClimaQva" className={clsx("logo-light")} />
+                            <img
+                                src={isDarkMode ? logoSvgUrl : logoDarkSvgUrl}
+                                alt="ClimaQva"
+                                className={clsx(isDarkMode ? "logo-light" : "logo-dark")}
+                            />
                         </div>
 
                         <p className={clsx("auth-brand-subtitle mb-4 text-center text-muted")}>{msg("loginSubtitle")}</p>
