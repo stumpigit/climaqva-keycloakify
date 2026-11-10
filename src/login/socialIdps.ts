@@ -13,10 +13,12 @@
  * lands on Google's consent screen with one click. An unknown alias is ignored by Keycloak
  * (it just shows the normal login page), so a wrong value degrades gracefully.
  *
- * NOTE: the alias has to match the Identity Provider alias in the realm exactly
- * (id.climaqva.ch -> "GOOGLE").
+ * NOTE: `alias` has to match the Identity Provider ALIAS in the realm exactly
+ * (id.climaqva.ch -> "google", lower case) because kc_idp_hint is looked up by alias.
+ * `displayName` is only the button caption - keep it in sync with the IdP's display name
+ * in the realm (there it is "GOOGLE"), because that is what the login page shows.
  */
-const SIGNUP_IDENTITY_PROVIDERS: { alias: string; displayName: string }[] = [{ alias: "GOOGLE", displayName: "Google" }];
+const SIGNUP_IDENTITY_PROVIDERS: { alias: string; displayName: string }[] = [{ alias: "google", displayName: "GOOGLE" }];
 
 export type SocialProvider = {
     alias: string;
