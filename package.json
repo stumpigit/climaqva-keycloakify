@@ -1,10 +1,10 @@
 {
-    "name": "augur-keycloakify",
-    "version": "0.1.0",
-    "description": "Keyvloak Theme for Augur",
+    "name": "climaqva-keycloakify",
+    "version": "0.2.0",
+    "description": "Keycloak login theme for ClimaQva (id.climaqva.ch)",
     "repository": {
         "type": "git",
-        "url": "git://github.com/codegouvfr/keycloakify-starter.git"
+        "url": "git://github.com/stumpigit/climaqva-keycloakify.git"
     },
     "type": "module",
     "scripts": {

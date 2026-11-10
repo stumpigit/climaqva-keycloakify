@@ -7,9 +7,10 @@ import { useSetClassName } from "keycloakify/tools/useSetClassName";
 import { useInitialize } from "keycloakify/login/Template.useInitialize";
 import type { I18n } from "./i18n";
 import type { KcContext } from "./KcContext";
+import { AlertIcon } from "./AlertIcon";
 
-import logoDarkPngUrl from "./assets/images/logo-dark.png";
-import logoPngUrl from "./assets/images/logo.png";
+import logoDarkSvgUrl from "./assets/images/climaqva-logo.svg";
+import logoSvgUrl from "./assets/images/climaqva-logo-inverse.svg";
 
 export default function Template(props: TemplateProps<KcContext, I18n>) {
     const {
@@ -39,12 +40,12 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
 
     useSetClassName({
         qualifiedName: "html",
-        className: ''
+        className: ""
     });
 
     useSetClassName({
         qualifiedName: "body",
-        className: ''
+        className: ""
     });
 
     const { isReadyToRender } = useInitialize({ kcContext, doUseDefaultCss });
@@ -53,19 +54,26 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
         return null;
     }
 
+    // A `display: none` <img> still downloads its src, so rendering both logos meant two
+    // fetches on every page load. The login pages run in a single, fixed mode (KcPage sets
+    // data-bs-theme on <html>), so only the matching one is rendered.
+    const isDarkMode = document.documentElement.dataset.bsTheme === "dark";
+
     return (
         <div className={clsx("auth-bg d-flex min-vh-100")}>
             <div className={clsx("row g-0 justify-content-center w-100 m-xxl-5 px-xxl-4 m-3")}>
                 <div className={clsx("col-xxl-3 col-lg-5 col-md-6")}>
                     <div className={kcClsx("kcLoginClass")}>
                         <div className={clsx("auth-brand d-flex justify-content-center mb-2")}>
-                            <img src={logoDarkPngUrl} alt="dark logo" height="26" className={clsx("logo-dark")} />
-                            <img src={logoPngUrl} alt="logo light" height="26" className={clsx("logo-light")} />
+                            <img
+                                src={isDarkMode ? logoSvgUrl : logoDarkSvgUrl}
+                                alt="ClimaQva"
+                                className={clsx(isDarkMode ? "logo-light" : "logo-dark")}
+                            />
                         </div>
 
-                        <p className={clsx("fw-semibold mb-4 text-center text-muted fs-15")}>Login to the AUGUR Toolbox</p>
+                        <p className={clsx("auth-brand-subtitle mb-4 text-center text-muted")}>{msg("loginSubtitle")}</p>
 
-                            
                         <div className={clsx("card overflow-hidden text-center p-xxl-4 p-3 mb-0")}>
                             <header className={kcClsx("kcFormHeaderClass")}>
                                 {enabledLanguages.length > 1 && (
@@ -92,7 +100,12 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
                                                 >
                                                     {enabledLanguages.map(({ languageTag, label, href }, i) => (
                                                         <li key={languageTag} className={kcClsx("kcLocaleListItemClass")} role="none">
-                                                            <a role="menuitem" id={`language-${i + 1}`} className={kcClsx("kcLocaleItemClass")} href={href}>
+                                                            <a
+                                                                role="menuitem"
+                                                                id={`language-${i + 1}`}
+                                                                className={kcClsx("kcLocaleItemClass")}
+                                                                href={href}
+                                                            >
                                                                 {label}
                                                             </a>
                                                         </li>
@@ -140,17 +153,23 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
                                     {displayMessage && message !== undefined && (message.type !== "warning" || !isAppInitiatedAction) && (
                                         <div
                                             className={clsx(
-                                                `alert-${message.type}`,
-                                                kcClsx("kcAlertClass"),
-                                                `pf-m-${message?.type === "error" ? "danger" : message.type}`
+                                                "alert",
+                                                "d-flex",
+                                                "align-items-center",
+                                                "gap-2",
+                                                "mb-4",
+                                                "text-start",
+                                                message.type === "error" ? "alert-danger" : `alert-${message.type}`
                                             )}
+                                            role="alert"
                                         >
-                                            <div className="pf-c-alert__icon">
-                                                {message.type === "success" && <span className={kcClsx("kcFeedbackSuccessIcon")}></span>}
-                                                {message.type === "warning" && <span className={kcClsx("kcFeedbackWarningIcon")}></span>}
-                                                {message.type === "error" && <span className={kcClsx("kcFeedbackErrorIcon")}></span>}
-                                                {message.type === "info" && <span className={kcClsx("kcFeedbackInfoIcon")}></span>}
-                                            </div>
+                                            <AlertIcon
+                                                type={
+                                                    message.type === "error"
+                                                        ? "error"
+                                                        : (message.type as "warning" | "success" | "info")
+                                                }
+                                            />
                                             <span
                                                 className={kcClsx("kcAlertTitleClass")}
                                                 dangerouslySetInnerHTML={{

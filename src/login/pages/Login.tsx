@@ -2,6 +2,8 @@ import type { JSX } from "keycloakify/tools/JSX";
 import { useState } from "react";
 import { kcSanitize } from "keycloakify/lib/kcSanitize";
 import { useIsPasswordRevealed } from "keycloakify/tools/useIsPasswordRevealed";
+import { PasswordRevealIcon } from "../PasswordRevealIcon";
+import { SocialIdentityProviders } from "../SocialIdentityProviders";
 import { clsx } from "keycloakify/tools/clsx";
 import type { PageProps } from "keycloakify/login/pages/PageProps";
 import { getKcClsx, type KcClsx } from "keycloakify/login/lib/kcClsx";
@@ -44,35 +46,12 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                 </div>
             }
             socialProvidersNode={
-                <>
-                    {realm.password && social?.providers !== undefined && social.providers.length !== 0 && (
-                        <div id="kc-social-providers" className={kcClsx("kcFormSocialAccountSectionClass")}>
-                            <hr />
-                            <h2>{msg("identity-provider-login-label")}</h2>
-                            <ul className={kcClsx("kcFormSocialAccountListClass", social.providers.length > 3 && "kcFormSocialAccountListGridClass")}>
-                                {social.providers.map((...[p, , providers]) => (
-                                    <li key={p.alias}>
-                                        <a
-                                            id={`social-${p.alias}`}
-                                            className={kcClsx(
-                                                "kcFormSocialAccountListButtonClass",
-                                                providers.length > 3 && "kcFormSocialAccountGridItem"
-                                            )}
-                                            type="button"
-                                            href={p.loginUrl}
-                                        >
-                                            {p.iconClasses && <i className={clsx(kcClsx("kcCommonLogoIdP"), p.iconClasses)} aria-hidden="true"></i>}
-                                            <span
-                                                className={clsx(kcClsx("kcFormSocialAccountNameClass"), p.iconClasses && "kc-social-icon-text")}
-                                                dangerouslySetInnerHTML={{ __html: kcSanitize(p.displayName) }}
-                                            ></span>
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-                </>
+                realm.password && social?.providers !== undefined && social.providers.length !== 0 ? (
+                    <SocialIdentityProviders
+                        providers={social.providers.map(({ alias, displayName, loginUrl }) => ({ alias, displayName, loginUrl }))}
+                        label={msg("identity-provider-login-label")}
+                    />
+                ) : null
             }
         >
             <div id="kc-form">
@@ -88,8 +67,8 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                             method="post"
                         >
                             {!usernameHidden && (
-                                <div className={clsx("mb3",kcClsx("kcFormGroupClass"))}>
-                                    <label htmlFor="username" className={clsx("form-label",kcClsx("kcLabelClass"))}>
+                                <div className={clsx("mb3", kcClsx("kcFormGroupClass"))}>
+                                    <label htmlFor="username" className={clsx("form-label", kcClsx("kcLabelClass"))}>
                                         {!realm.loginWithEmailAllowed
                                             ? msg("username")
                                             : !realm.registrationEmailAsUsername
@@ -147,19 +126,19 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                                 )}
                             </div>
 
-                            <div className={clsx("d-flex justify-content-between mb-3",kcClsx("kcFormGroupClass", "kcFormSettingClass"))}>
+                            <div className={clsx("d-flex justify-content-between mb-3", kcClsx("kcFormGroupClass", "kcFormSettingClass"))}>
                                 <div id="kc-form-options">
                                     {realm.rememberMe && !usernameHidden && (
                                         <div className="form-check">
-                                                <input
-                                                    tabIndex={5}
-                                                    className="form-check-input"
-                                                    id="rememberMe"
-                                                    name="rememberMe"
-                                                    type="checkbox"
-                                                    defaultChecked={!!login.rememberMe}
-                                                />
-                                                
+                                            <input
+                                                tabIndex={5}
+                                                className="form-check-input"
+                                                id="rememberMe"
+                                                name="rememberMe"
+                                                type="checkbox"
+                                                defaultChecked={!!login.rememberMe}
+                                            />
+
                                             <label className="form-label" htmlFor="rememberMe">
                                                 {msg("rememberMe")}
                                             </label>
@@ -177,12 +156,15 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                                 </div>
                             </div>
 
-                            <div id="kc-form-buttons" className={clsx("d-grid",kcClsx("kcFormGroupClass"))}>
+                            <div id="kc-form-buttons" className={clsx("d-grid", kcClsx("kcFormGroupClass"))}>
                                 <input type="hidden" id="id-hidden-input" name="credentialId" value={auth.selectedCredential} />
                                 <input
                                     tabIndex={7}
                                     disabled={isLoginButtonDisabled}
-                                    className={clsx("btn btn-primary fw-semibold",kcClsx("kcButtonClass", "kcButtonPrimaryClass", "kcButtonBlockClass", "kcButtonLargeClass"))}
+                                    className={clsx(
+                                        "btn btn-primary fw-semibold",
+                                        kcClsx("kcButtonClass", "kcButtonPrimaryClass", "kcButtonBlockClass", "kcButtonLargeClass")
+                                    )}
                                     name="login"
                                     id="kc-login"
                                     type="submit"
@@ -205,16 +187,16 @@ function PasswordWrapper(props: { kcClsx: KcClsx; i18n: I18n; passwordInputId: s
     const { isPasswordRevealed, toggleIsPasswordRevealed } = useIsPasswordRevealed({ passwordInputId });
 
     return (
-        <div className={clsx("input-group",kcClsx("kcInputGroup"))}>
+        <div className={clsx("input-group", kcClsx("kcInputGroup"))}>
             {children}
-             <button
+            <button
                 type="button"
-                className={clsx(isPasswordRevealed ? "btn btn-outline-secondary ti ti-eye-off":"btn btn-outline-secondary ti ti-eye")}
+                className={clsx("btn btn-outline-secondary", "kc-passwd-toggle")}
                 aria-label={msgStr(isPasswordRevealed ? "hidePassword" : "showPassword")}
                 aria-controls={passwordInputId}
                 onClick={toggleIsPasswordRevealed}
             >
-                
+                <PasswordRevealIcon isPasswordRevealed={isPasswordRevealed} />
             </button>
         </div>
     );
