@@ -7,6 +7,7 @@ import { useSetClassName } from "keycloakify/tools/useSetClassName";
 import { useInitialize } from "keycloakify/login/Template.useInitialize";
 import type { I18n } from "./i18n";
 import type { KcContext } from "./KcContext";
+import { AlertIcon } from "./AlertIcon";
 
 import logoDarkSvgUrl from "./assets/images/climaqva-logo.svg";
 import logoSvgUrl from "./assets/images/climaqva-logo-inverse.svg";
@@ -152,17 +153,23 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
                                     {displayMessage && message !== undefined && (message.type !== "warning" || !isAppInitiatedAction) && (
                                         <div
                                             className={clsx(
-                                                `alert-${message.type}`,
-                                                kcClsx("kcAlertClass"),
-                                                `pf-m-${message?.type === "error" ? "danger" : message.type}`
+                                                "alert",
+                                                "d-flex",
+                                                "align-items-center",
+                                                "gap-2",
+                                                "mb-4",
+                                                "text-start",
+                                                message.type === "error" ? "alert-danger" : `alert-${message.type}`
                                             )}
+                                            role="alert"
                                         >
-                                            <div className="pf-c-alert__icon">
-                                                {message.type === "success" && <span className={kcClsx("kcFeedbackSuccessIcon")}></span>}
-                                                {message.type === "warning" && <span className={kcClsx("kcFeedbackWarningIcon")}></span>}
-                                                {message.type === "error" && <span className={kcClsx("kcFeedbackErrorIcon")}></span>}
-                                                {message.type === "info" && <span className={kcClsx("kcFeedbackInfoIcon")}></span>}
-                                            </div>
+                                            <AlertIcon
+                                                type={
+                                                    message.type === "error"
+                                                        ? "error"
+                                                        : (message.type as "warning" | "success" | "info")
+                                                }
+                                            />
                                             <span
                                                 className={kcClsx("kcAlertTitleClass")}
                                                 dangerouslySetInnerHTML={{

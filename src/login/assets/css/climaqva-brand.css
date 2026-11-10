@@ -99,7 +99,11 @@
     --ct-border-color-translucent: rgba(52, 64, 116, 0.14);
     --ct-heading-color: #232a45;
     --ct-link-color: #344074;
+    /* bootstrap's `a` rule uses rgba(var(--ct-link-color-rgb), ...) - without the
+       -rgb twin the old Aspire blue kept winning for every link. */
+    --ct-link-color-rgb: 52, 64, 116;
     --ct-link-hover-color: #29335c;
+    --ct-link-hover-color-rgb: 41, 51, 92;
     --ct-custom-bg: #ffffff;
     --ct-box-shadow: 0 1px 2px rgba(23, 30, 58, 0.04), 0 2px 8px rgba(23, 30, 58, 0.05);
 
@@ -139,7 +143,9 @@
     --ct-border-color-translucent: rgba(255, 255, 255, 0.14);
     --ct-heading-color: #e6eaf3;
     --ct-link-color: #a9b6e8;
+    --ct-link-color-rgb: 169, 182, 232;
     --ct-link-hover-color: #c0d3e9;
+    --ct-link-hover-color-rgb: 192, 211, 233;
     --ct-custom-bg: #161b2d;
     --ct-custom-color: #e6eaf3;
     --ct-light: rgba(255, 255, 255, 0.11);
@@ -288,6 +294,55 @@ body {
     --ct-btn-active-color: #ffffff;
     --ct-btn-active-bg: #74adb5;
     --ct-btn-active-border-color: #74adb5;
+}
+
+/* Disabled buttons: bootstrap compiles the ORIGINAL palette into
+   --ct-btn-disabled-*, so a disabled .btn-primary still came out in the old
+   Aspire blue (#1478f0). The register submit button is rendered disabled until
+   the form validates, which made that very visible. */
+
+.btn-primary {
+    --ct-btn-disabled-color: #ffffff;
+    --ct-btn-disabled-bg: #344074;
+    --ct-btn-disabled-border-color: #344074;
+}
+
+.btn-outline-primary {
+    --ct-btn-disabled-color: #344074;
+    --ct-btn-disabled-border-color: #344074;
+}
+
+.btn-secondary {
+    --ct-btn-disabled-color: #ffffff;
+    --ct-btn-disabled-bg: #598d96;
+    --ct-btn-disabled-border-color: #598d96;
+}
+
+.btn-outline-secondary {
+    --ct-btn-disabled-color: #598d96;
+    --ct-btn-disabled-border-color: #598d96;
+}
+
+:root[data-bs-theme="dark"] .btn-primary {
+    --ct-btn-disabled-color: #ffffff;
+    --ct-btn-disabled-bg: #4f63b3;
+    --ct-btn-disabled-border-color: #4f63b3;
+}
+
+:root[data-bs-theme="dark"] .btn-outline-primary {
+    --ct-btn-disabled-color: #7387d3;
+    --ct-btn-disabled-border-color: #7387d3;
+}
+
+:root[data-bs-theme="dark"] .btn-secondary {
+    --ct-btn-disabled-color: #ffffff;
+    --ct-btn-disabled-bg: #4b8089;
+    --ct-btn-disabled-border-color: #4b8089;
+}
+
+:root[data-bs-theme="dark"] .btn-outline-secondary {
+    --ct-btn-disabled-color: #74adb5;
+    --ct-btn-disabled-border-color: #74adb5;
 }
 
 /* ------------------------------------------------------------ login card */

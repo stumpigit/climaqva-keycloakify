@@ -2,6 +2,7 @@ import type { JSX } from "keycloakify/tools/JSX";
 import { useState } from "react";
 import { kcSanitize } from "keycloakify/lib/kcSanitize";
 import { useIsPasswordRevealed } from "keycloakify/tools/useIsPasswordRevealed";
+import { PasswordRevealIcon } from "../PasswordRevealIcon";
 import { clsx } from "keycloakify/tools/clsx";
 import type { PageProps } from "keycloakify/login/pages/PageProps";
 import { getKcClsx, type KcClsx } from "keycloakify/login/lib/kcClsx";
@@ -217,24 +218,7 @@ function PasswordWrapper(props: { kcClsx: KcClsx; i18n: I18n; passwordInputId: s
                 aria-controls={passwordInputId}
                 onClick={toggleIsPasswordRevealed}
             >
-                {/* Inline SVG instead of the `ti ti-eye` icon font: the tabler icon font is
-                    800 KB (gzip does not help) and this was the only glyph used anywhere. */}
-                <svg
-                    aria-hidden="true"
-                    focusable="false"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <path d="M12 5C7 5 3.6 7.4 2 12c1.6 4.6 5 7 10 7s8.4-2.4 10-7c-1.6-4.6-5-7-10-7Z" />
-                    <circle cx="12" cy="12" r="3" />
-                    {isPasswordRevealed ? <path d="M4 4l16 16" /> : null}
-                </svg>
+                <PasswordRevealIcon isPasswordRevealed={isPasswordRevealed} />
             </button>
         </div>
     );

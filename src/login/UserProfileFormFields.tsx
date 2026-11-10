@@ -4,6 +4,7 @@ import { assert } from "keycloakify/tools/assert";
 import { useIsPasswordRevealed } from "keycloakify/tools/useIsPasswordRevealed";
 import type { KcClsx } from "keycloakify/login/lib/kcClsx";
 import { clsx } from "keycloakify/tools/clsx";
+import { PasswordRevealIcon } from "./PasswordRevealIcon";
 import {
     useUserProfileForm,
     getButtonToDisplayForMultivaluedAttributeField,
@@ -54,7 +55,11 @@ export default function UserProfileFormFields(props: UserProfileFormFieldsProps<
                         <div
                             className={clsx("mb-3",kcClsx("kcFormGroupClass"))}
                             style={{
-                                display: attribute.name === "password-confirm" && !doMakeUserConfirmPassword ? "none" : undefined
+                                display:
+                                    attribute.annotations.inputType === "hidden" ||
+                                    (attribute.name === "password-confirm" && !doMakeUserConfirmPassword)
+                                        ? "none"
+                                        : undefined
                             }}
                         >
                             <div className={kcClsx("kcLabelWrapperClass")}>
@@ -215,6 +220,10 @@ function InputFieldByType(props: InputFieldByTypeProps) {
     const { attribute, valueOrValues } = props;
 
     switch (attribute.annotations.inputType) {
+        // NOTE: Unfortunately, keycloak won't let you define input type="hidden" in the Admin Console.
+        // sometimes in the future it might.
+        case "hidden":
+            return <input type="hidden" name={attribute.name} value={valueOrValues} />;
         case "textarea":
             return <TextareaTag {...props} />;
         case "select":
@@ -257,16 +266,17 @@ function PasswordWrapper(props: { kcClsx: KcClsx; i18n: I18n; passwordInputId: s
     const { isPasswordRevealed, toggleIsPasswordRevealed } = useIsPasswordRevealed({ passwordInputId });
 
     return (
-        <div className={kcClsx("kcInputGroup")}>
+        <div className={clsx("input-group", kcClsx("kcInputGroup"))}>
             {children}
             <button
                 type="button"
-                className={kcClsx("kcFormPasswordVisibilityButtonClass")}
+                className={clsx("btn btn-outline-secondary", "kc-passwd-toggle")}
                 aria-label={msgStr(isPasswordRevealed ? "hidePassword" : "showPassword")}
                 aria-controls={passwordInputId}
                 onClick={toggleIsPasswordRevealed}
             >
-                           </button>
+                <PasswordRevealIcon isPasswordRevealed={isPasswordRevealed} />
+            </button>
         </div>
     );
 }
